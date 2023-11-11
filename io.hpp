@@ -116,7 +116,7 @@ void inline for_each(auto &iterable, auto &&lambda) {
 /// @brief `std::transform` with less boilerplate
 /// @param iterable container to be transformed
 /// @param lambda function that takes a T and returns a transformed T
-auto transform(auto &iterable, auto &&lambda) {
+auto inline transform(auto &iterable, auto &&lambda) {
   std::transform(iterable.cbegin(), iterable.cend(), iterable.begin(), lambda);
 }
 
@@ -125,14 +125,14 @@ auto transform(auto &iterable, auto &&lambda) {
 /// @param iterable container to be mapped over
 /// @param lambda function that takes a T and returns a transformed T
 /// @return a new container with transformed elements
-auto map(auto &iterable, auto &&lambda) {
+auto inline map(auto &iterable, auto &&lambda) {
   auto copy = std::vector(iterable);
   transform(copy, lambda);
   return copy;
 }
 
 /// @brief Prints a container to stdout
-void print(auto &iterable, char delimeter = ' ') {
+void inline print(auto &iterable, char delimeter = ' ') {
   static_assert(IOStreamableContainer<decltype(iterable)>);
   for_each(iterable,
            [&](const auto &value) { std::cout << value << delimeter; });
