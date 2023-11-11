@@ -1,0 +1,11 @@
+cmake-build-*
+build/
+
+*.out
+*.o
+*.a
+*.so
+*.dll
+
+.vscode/!c_cpp_properties.json
+.vscode/settings.json
