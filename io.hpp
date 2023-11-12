@@ -46,15 +46,16 @@ concept IOStreamableContainer = requires(T a) {
 /// @param delimeter optional char delimeter
 template <typename T>
   requires IOReadable<T>
-T input(std::string message, char delimeter = '\n') {
+T input(std::string message = "", char strDelimeter = ' ',
+        char lineDelimeter = '\n') {
   std::cout << message;
   T result;
   if (std::cin.peek() == '\n') {
     std::cin.ignore();
   }
   if constexpr (std::is_same_v<T, std::string>) {
-    std::getline(std::cin >> std::ws, result, delimeter);
-    result = result.substr(0, result.find(' '));
+    std::getline(std::cin >> std::ws, result, lineDelimeter);
+    result = result.substr(0, result.find(strDelimeter));
   } else {
     std::cin >> result;
   }

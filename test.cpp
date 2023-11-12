@@ -25,11 +25,19 @@ TEST_CASE("Generic stdin double input parses successfully", "[input<double>]") {
   REQUIRE(std::is_same_v<decltype(num), const double>);
 }
 
-TEST_CASE("Generic stdin string input parses successfully",
+TEST_CASE("Generic stdin string input parses until ' ' successfully",
           "[input<std::string>]") {
   // As string
   const auto str = input<string>("Input a word: ");
   REQUIRE(str == "hello");
+  REQUIRE(std::is_same_v<decltype(str), const string>);
+}
+
+TEST_CASE("Generic stdin string input parses until '\\n' successfully",
+          "[input<std::string>]") {
+  // As string
+  const auto str = input<string>("Input a sentence: ", '\n');
+  REQUIRE(str == "this is a sentence");
   REQUIRE(std::is_same_v<decltype(str), const string>);
 }
 
@@ -49,7 +57,7 @@ TEST_CASE("Generic stdin double inputs parses successfully",
   REQUIRE(std::is_same_v<decltype(values), const vector<double>>);
 }
 
-TEST_CASE("Generic stdin string input parses successfully",
+TEST_CASE("Generic stdin string input parses into vector<string> successfully",
           "[tokenize<string>]") {
   // As a vector<string>
   const auto str = tokenize<string>("Input a sentence: ");
