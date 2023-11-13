@@ -85,6 +85,16 @@ TEST_CASE("Generic map over vector<double>", "[map<double>]") {
   REQUIRE(std::is_same_v<decltype(mapped), const std::vector<double>>);
 }
 
+TEST_CASE("Generic map from vector<int> to vector<double>",
+          "[map_from_into<int, std::string>]") {
+  const auto values = vector<int>{1, 2, 3, 4, 5};
+  const auto f = [](const int x) { return (double)x * 2; };
+
+  const auto doubles = map_from_into<int, double>(values, f);
+  REQUIRE(doubles == vector<double>{2.0, 4.0, 6.0, 8.0, 10.0});
+  REQUIRE(std::is_same_v<decltype(doubles), const std::vector<double>>);
+}
+
 TEST_CASE("Generic map from vector<int> to vector<string>",
           "[map_from_into<int, std::string>]") {
   const auto values = vector<int>{1, 2, 3, 4, 5};
