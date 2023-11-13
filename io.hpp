@@ -33,7 +33,7 @@ concept IterableContainer = requires(T a) {
 template <typename T>
 concept IOStreamableContainer = requires(T a) {
   {
-    std::for_each(a.begin(), a.end(), [](const auto &value) {
+    for_each(a, [](const auto &value) {
       static_assert(IOWriteable<decltype(value)>);
       static_assert(IOReadable<decltype(value)>);
     })
