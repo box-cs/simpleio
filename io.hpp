@@ -46,8 +46,9 @@ concept IOStreamableContainer = requires(T a) {
 /// @param delimeter optional char delimeter
 template <typename T>
   requires IOReadable<T>
-T input(std::string message = "", char strDelimeter = ' ',
-        char lineDelimeter = '\n') {
+[[nodiscard]] T input(const std::string &&message = "",
+                      const char &&strDelimeter = ' ',
+                      const char &&lineDelimeter = '\n') {
   std::cout << message;
   T result;
   if (std::cin.peek() == '\n') {
@@ -68,7 +69,8 @@ T input(std::string message = "", char strDelimeter = ' ',
 /// @param delimeter optional char delimeter
 template <typename T>
   requires IOReadable<T>
-std::vector<T> tokenize(std::string message = "", char delimeter = '\n') {
+[[nodiscard]] std::vector<T> tokenize(const std::string &&message = "",
+                                      const char &&delimeter = '\n') {
   std::cout << message;
   std::vector<T> results = {};
   std::string token = "";
@@ -98,8 +100,8 @@ std::vector<T> tokenize(std::string message = "", char delimeter = '\n') {
 /// @return
 template <typename T, typename K>
   requires IterableContainer<std::vector<T>>
-std::vector<K> map_from_into(const std::vector<T> &iterable,
-                             std::function<K(const T &)> lambda) {
+[[nodiscard]] std::vector<K> map_from_into(const std::vector<T> &iterable,
+                                           std::function<K(const T &)> lambda) {
   std::vector<K> tokens = {};
   for (const T &value : iterable) {
     tokens.push_back(lambda(value));
@@ -126,14 +128,14 @@ auto inline transform(auto &iterable, auto &&lambda) {
 /// @param iterable container to be mapped over
 /// @param lambda function that takes a T and returns a transformed T
 /// @return a new container with transformed elements
-auto inline map(auto &iterable, auto &&lambda) {
+[[nodiscard]] auto inline map(auto &iterable, auto &&lambda) {
   auto copy = std::vector(iterable);
   transform(copy, lambda);
   return copy;
 }
 
 /// @brief Prints a container to stdout
-void inline print(auto &iterable, char delimeter = ' ') {
+void inline print(auto &iterable, const char &&delimeter = ' ') {
   static_assert(IOStreamableContainer<decltype(iterable)>);
   for_each(iterable,
            [&](const auto &value) { std::cout << value << delimeter; });
