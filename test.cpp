@@ -16,16 +16,22 @@ std::stringstream ss{"5\n10\nhello\nthis is a sentence\n1 2 "
                      "3 4 5\n1.0 2.0 3.0 4.0 5.0\nthis is "
                      "a sentence\n"};
 
+template <typename T>
+  requires IOReadable<T>
+[[nodiscard]] T testInput(const std::string &&message, std::istream &istream) {
+  return input<T>(std::string(message), ' ', '\n', istream);
+}
+
 TEST_CASE("Generic stdin int input parses successfully", "[input<int>]") {
   // As int
-  const auto num = input<int>("Input a number: ", ss);
+  const auto num = testInput<int>("Input a number: ", ss);
   REQUIRE(num == 5);
   REQUIRE(std::is_same_v<decltype(num), const int>);
 }
 
 TEST_CASE("Generic stdin double input parses successfully", "[input<double>]") {
   // As double
-  const auto num = input<double>("Input a double: ", ss);
+  const auto num = testInput<double>("Input a double: ", ss);
   REQUIRE(num == 10);
   REQUIRE(std::is_same_v<decltype(num), const double>);
 }
@@ -33,7 +39,7 @@ TEST_CASE("Generic stdin double input parses successfully", "[input<double>]") {
 TEST_CASE("Generic stdin string input parses until ' ' successfully",
           "[input<std::string>]") {
   // As string
-  const auto str = input<string>("Input a word: ", ss);
+  const auto str = testInput<string>("Input a word: ", ss);
   REQUIRE(str == "hello");
   REQUIRE(std::is_same_v<decltype(str), const string>);
 }

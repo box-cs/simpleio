@@ -39,26 +39,6 @@ concept IOStreamableContainer = requires(T a) {
     })
   };
 };
-/// @brief Generic input function that takes a message and a delimeter
-/// @tparam T return type
-/// @param message optional string message
-/// @param delimeter optional char delimeter
-template <typename T>
-  requires IOReadable<T>
-[[nodiscard]] T input(const std::string &&message, std::istream &istream) {
-  std::cout << message;
-  T result;
-  if (istream.peek() == '\n') {
-    istream.ignore();
-  }
-  if constexpr (std::is_same_v<T, std::string>) {
-    std::getline(istream >> std::ws, result, '\n');
-    result = result.substr(0, result.find(' '));
-  } else {
-    istream >> result;
-  }
-  return result;
-}
 
 /// @brief Generic input function that takes a message and a delimeter
 /// @tparam T return type
