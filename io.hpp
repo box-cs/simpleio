@@ -39,6 +39,26 @@ concept IOStreamableContainer = requires(T a) {
     })
   };
 };
+/// @brief Generic input function that takes a message and a delimeter
+/// @tparam T return type
+/// @param message optional string message
+/// @param delimeter optional char delimeter
+template <typename T>
+  requires IOReadable<T>
+[[nodiscard]] T input(const std::string &&message, std::istream &istream) {
+  std::cout << message;
+  T result;
+  if (istream.peek() == '\n') {
+    istream.ignore();
+  }
+  if constexpr (std::is_same_v<T, std::string>) {
+    std::getline(istream >> std::ws, result, '\n');
+    result = result.substr(0, result.find(' '));
+  } else {
+    istream >> result;
+  }
+  return result;
+}
 
 /// @brief Generic input function that takes a message and a delimeter
 /// @tparam T return type
@@ -46,19 +66,19 @@ concept IOStreamableContainer = requires(T a) {
 /// @param delimeter optional char delimeter
 template <typename T>
   requires IOReadable<T>
-[[nodiscard]] T input(const std::string &&message = "",
-                      const char &&strDelimeter = ' ',
-                      const char &&lineDelimeter = '\n') {
+[[nodiscard]] T
+input(const std::string &&message = "", const char &&strDelimeter = ' ',
+      const char &&lineDelimeter = '\n', std::istream &istream = std::cin) {
   std::cout << message;
   T result;
-  if (std::cin.peek() == '\n') {
-    std::cin.ignore();
+  if (istream.peek() == '\n') {
+    istream.ignore();
   }
   if constexpr (std::is_same_v<T, std::string>) {
-    std::getline(std::cin >> std::ws, result, lineDelimeter);
+    std::getline(istream >> std::ws, result, lineDelimeter);
     result = result.substr(0, result.find(strDelimeter));
   } else {
-    std::cin >> result;
+    istream >> result;
   }
   return result;
 }
@@ -70,14 +90,15 @@ template <typename T>
 template <typename T>
   requires IOReadable<T>
 [[nodiscard]] std::vector<T> tokenize(const std::string &&message = "",
-                                      const char &&delimeter = '\n') {
+                                      const char &&delimeter = '\n',
+                                      std::istream &istream = std::cin) {
   std::cout << message;
   std::vector<T> results = {};
   std::string token = "";
-  if (std::cin.peek() == '\n') {
-    std::cin.ignore();
+  if (istream.peek() == '\n') {
+    istream.ignore();
   }
-  std::getline(std::cin >> std::ws, token, delimeter);
+  std::getline(istream >> std::ws, token, delimeter);
   std::istringstream iss(token);
   T value;
   while (iss >> value) {
