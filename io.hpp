@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <concepts>
+#include <fstream>
 #include <functional>
 #include <iostream>
 #include <iterator>
@@ -141,6 +142,20 @@ void inline print(auto &iterable, const char &&delimeter = ' ') {
   for_each(iterable,
            [&](const auto &value) { std::cout << value << delimeter; });
   std::cout << '\n';
+}
+
+std::stringstream readFile(
+    std::string &&file, const auto &&errorCallback = []() {}) {
+  std::stringstream ss;
+  std::ifstream ifs(file);
+  if (ifs.is_open()) {
+    ss << ifs.rdbuf();
+  } else {
+    std::cerr << "Failed to open file" << std::endl;
+    errorCallback();
+  }
+  ifs.close();
+  return std::move(ss);
 }
 #endif /* SIMPLE_IO_H */
 }
