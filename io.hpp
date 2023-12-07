@@ -144,10 +144,10 @@ void inline print(auto &iterable, const char &&delimeter = ' ') {
   std::cout << '\n';
 }
 
-std::stringstream readFile(
+std::stringstream inline readFile(
     std::string &&file, const auto &&errorCallback = []() {}) {
   std::stringstream ss;
-  std::ifstream ifs(file);
+  std::ifstream ifs{file};
   if (ifs.is_open()) {
     ss << ifs.rdbuf();
   } else {
@@ -155,7 +155,7 @@ std::stringstream readFile(
     errorCallback();
   }
   ifs.close();
-  return std::move(ss);
+  return ss;
 }
+} // namespace io
 #endif /* SIMPLE_IO_H */
-}
