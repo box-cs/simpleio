@@ -44,7 +44,7 @@ concept IOStreamableContainer = requires(T a) {
 /// @brief Generic input function that takes a message and a delimeter
 /// @tparam T return type
 /// @param message optional string message
-/// @param delimeter optional char delimeter
+/// @param getlineDelimeter optional char delimeter
 template <typename T>
   requires IOReadable<T>
 [[nodiscard]] T
@@ -67,11 +67,11 @@ input(const std::string &&message = "", const char &&subStrDelimeter = ' ',
 /// @brief Generic function that tokenizes from stdin
 /// @tparam T return type std::vector<T>
 /// @param message optional string message
-/// @param delimeter optional char delimeter
+/// @param getlineDelimeter optional char delimeter
 template <typename T>
   requires IOReadable<T>
 [[nodiscard]] std::vector<T> tokenize(const std::string &&message = "",
-                                      const char &&delimeter = '\n',
+                                      const char &&getlineDelimeter = '\n',
                                       std::istream &istream = std::cin) {
   std::cout << message;
   std::vector<T> results = {};
@@ -79,7 +79,7 @@ template <typename T>
   if (istream.peek() == '\n') {
     istream.ignore();
   }
-  std::getline(istream >> std::ws, token, delimeter);
+  std::getline(istream >> std::ws, token, getlineDelimeter);
   std::istringstream iss(token);
   T value;
   while (iss >> value) {
