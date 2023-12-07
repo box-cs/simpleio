@@ -41,10 +41,11 @@ concept IOStreamableContainer = requires(T a) {
   };
 };
 
-/// @brief Generic input function that takes a message and a delimeter
+/// @brief Returns a T from an istream
 /// @tparam T return type
 /// @param message optional string message
 /// @param getlineDelimeter optional char delimeter
+/// @param istream optional istream
 template <typename T>
   requires IOReadable<T>
 [[nodiscard]] T
@@ -64,10 +65,11 @@ input(const std::string &&message = "", const char &&subStrDelimeter = ' ',
   return result;
 }
 
-/// @brief Generic function that tokenizes from stdin
+/// @brief Tokenizes from an istream and returns a vector of T
 /// @tparam T return type std::vector<T>
 /// @param message optional string message
 /// @param getlineDelimeter optional char delimeter
+/// @param istream optional istream
 template <typename T>
   requires IOReadable<T>
 [[nodiscard]] std::vector<T> tokenize(const std::string &&message = "",
@@ -92,9 +94,8 @@ template <typename T>
   return results;
 }
 
-/// @brief This function applies a transformation to each element in a given
-/// container, and then returns a new container that contains the transformed
-/// elements. The original container remains unchanged.
+/// @brief Transforms each element from a container of T into a new container of
+/// K without mutating the original container.
 /// @tparam T type of the elements in the source container
 /// @tparam K type of the elements in the destination container
 /// @param iterable container to be mapped over
