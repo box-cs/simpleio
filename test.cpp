@@ -17,9 +17,9 @@ using std::string;
 using std::vector;
 using namespace io;
 
-// std::stringstream ss{"5\n10\nhello\nthis is a sentence\n1 2 "
-//                      "3 4 5\n1.0 2.0 3.0 4.0 5.0\nthis is "
-//                      "a sentence\n"};
+std::stringstream ss{"5\n10\nhello\nthis is a sentence\n1 2 "
+                     "3 4 5\n1.0 2.0 3.0 4.0 5.0\nthis is "
+                     "a sentence\n"};
 
 template <typename T>
   requires IOReadable<T>
@@ -27,32 +27,17 @@ template <typename T>
   return input<T>(std::string(message), ' ', '\n', istream);
 }
 
-static std::stringstream ss;
-
-class SetupListener : public Catch::EventListenerBase {
-public:
-  using Catch::EventListenerBase::EventListenerBase;
-
-  void testRunStarting(Catch::TestRunInfo const &) override {
-    {
-      ss = readFile("/home/box/source/cpp/lib/test.txt", []() { exit(1); });
-    }
-  }
-};
-
-CATCH_REGISTER_LISTENER(SetupListener)
-
 TEST_CASE("Simple IO") {
   SECTION("Generic stdin int input parses successfully", "[input<int>]") {
     // As int
-    const auto num = testInput<int>("Input a number: ", ss);
+    const auto num = testInput<int>("Inputting a number: ", ss);
     REQUIRE(num == 5);
     REQUIRE(std::is_same_v<decltype(num), const int>);
   }
 
   SECTION("Generic stdin double input parses successfully", "[input<double>]") {
     // As double
-    const auto num = testInput<double>("Input a double: ", ss);
+    const auto num = testInput<double>("Inputting a double: ", ss);
     REQUIRE(num == 10);
     REQUIRE(std::is_same_v<decltype(num), const double>);
   }
@@ -60,7 +45,7 @@ TEST_CASE("Simple IO") {
   SECTION("Generic stdin string input parses until ' ' successfully",
           "[input<std::string>]") {
     // As string
-    const auto str = testInput<string>("Input a word: ", ss);
+    const auto str = testInput<string>("Inputting a word: ", ss);
     REQUIRE(str == "hello");
     REQUIRE(std::is_same_v<decltype(str), const string>);
   }
@@ -68,15 +53,15 @@ TEST_CASE("Simple IO") {
   SECTION("Generic stdin string input parses until '\\n' successfully",
           "[input<std::string>]") {
     // As string
-    const auto str = input<string>("Input a sentence: ", '\n', '\n', ss);
+    const auto str = input<string>("Inputting a sentence: ", '\n', '\n', ss);
     REQUIRE(str == "this is a sentence");
     REQUIRE(std::is_same_v<decltype(str), const string>);
   }
 
   SECTION("Generic stdin int inputs parses successfully", "[tokenize<int>]") {
     //  As a vector<int>
-    const auto values =
-        tokenize<int>("Input some integers [delimeted by space]: ", '\n', ss);
+    const auto values = tokenize<int>(
+        "Inputting some integers [delimeted by space]: ", '\n', ss);
     REQUIRE(values == vector<int>{1, 2, 3, 4, 5});
     REQUIRE(std::is_same_v<decltype(values), const vector<int>>);
   }
@@ -84,7 +69,7 @@ TEST_CASE("Simple IO") {
   SECTION("Generic stdin double inputs parses successfully",
           "[tokenize<double>]") {
     // As a vector<double>
-    const auto values = tokenize<double>("Input some doubles: ", '\n', ss);
+    const auto values = tokenize<double>("Inputting some doubles: ", '\n', ss);
     REQUIRE(values == vector<double>{1.0, 2.0, 3.0, 4.0, 5.0});
     REQUIRE(std::is_same_v<decltype(values), const vector<double>>);
   }
@@ -92,7 +77,7 @@ TEST_CASE("Simple IO") {
   SECTION("Generic stdin string input parses into vector<string> successfully",
           "[tokenize<string>]") {
     // As a vector<string>
-    const auto str = tokenize<string>("Input a sentence: ", '\n', ss);
+    const auto str = tokenize<string>("Inputting a sentence: ", '\n', ss);
     REQUIRE(str == vector<string>{"this", "is", "a", "sentence"});
     REQUIRE(std::is_same_v<decltype(str), const vector<string>>);
   }
@@ -137,4 +122,5 @@ TEST_CASE("Simple IO") {
                                       "Value!: 8", "Value!: 10"});
     REQUIRE(std::is_same_v<decltype(strings), const std::vector<string>>);
   }
+  std::cout << '\n';
 }

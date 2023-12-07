@@ -48,16 +48,16 @@ concept IOStreamableContainer = requires(T a) {
 template <typename T>
   requires IOReadable<T>
 [[nodiscard]] T
-input(const std::string &&message = "", const char &&strDelimeter = ' ',
-      const char &&lineDelimeter = '\n', std::istream &istream = std::cin) {
+input(const std::string &&message = "", const char &&subStrDelimeter = ' ',
+      const char &&getLineDelimeter = '\n', std::istream &istream = std::cin) {
   std::cout << message;
   T result;
   if (istream.peek() == '\n') {
     istream.ignore();
   }
   if constexpr (std::is_same_v<T, std::string>) {
-    std::getline(istream >> std::ws, result, lineDelimeter);
-    result = result.substr(0, result.find(strDelimeter));
+    std::getline(istream >> std::ws, result, getLineDelimeter);
+    result = result.substr(0, result.find(subStrDelimeter));
   } else {
     istream >> result;
   }
