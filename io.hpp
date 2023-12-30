@@ -160,5 +160,15 @@ std::stringstream inline readFile(
   ifs.close();
   return ss;
 }
+
+template <typename T>
+[[nodiscard]] std::vector<T> inline readLines(
+    std::stringstream &ss, std::function<T(std::stringstream &)> reader) {
+  std::vector<T> lines{};
+  do {
+    lines.push_back(reader(ss));
+  } while (lines.back().size() > 0);
+  return {lines.begin(), lines.end() - 1};
+};
 } // namespace io
 #endif /* SIMPLE_IO_H */
