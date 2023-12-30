@@ -146,14 +146,15 @@ void inline print(auto &iterable, const char &&delimeter = ' ') {
 }
 
 std::stringstream inline readFile(
-    std::string &&file, const auto &&errorCallback = []() {}) {
+    std::string &&file,
+    std::function<void(std::string)> errorCallback = [](std::string) {}) {
   std::stringstream ss;
   std::ifstream ifs{file};
   if (ifs.is_open()) {
     ss << ifs.rdbuf();
   } else {
     std::cerr << "Failed to open file" << std::endl;
-    errorCallback();
+    errorCallback(file);
   }
   ifs.close();
   return ss;
