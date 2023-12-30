@@ -116,14 +116,14 @@ template <typename T, typename K>
 /// @param iterable container to be iterated over
 /// @param lambda function that takes a T and returns void
 void inline for_each(auto &iterable, auto &&lambda) {
-  std::for_each(iterable.cbegin(), iterable.cend(), lambda);
+  std::ranges::for_each(iterable, lambda);
 }
 
 /// @brief `std::transform` with less boilerplate
 /// @param iterable container to be transformed
 /// @param lambda function that takes a T and returns a transformed T
-auto inline transform(auto &iterable, auto &&lambda) {
-  std::transform(iterable.cbegin(), iterable.cend(), iterable.begin(), lambda);
+void inline transform(auto &iterable, auto &&lambda) {
+  return std::ranges::transform(iterable, lambda);
 }
 
 /// @brief  Maps over a container and returns a new container with transformed
@@ -140,8 +140,9 @@ auto inline transform(auto &iterable, auto &&lambda) {
 /// @brief Prints a container to stdout
 void inline print(auto &iterable, const char &&delimeter = ' ') {
   static_assert(IOStreamableContainer<decltype(iterable)>);
-  for_each(iterable,
-           [&](const auto &value) { std::cout << value << delimeter; });
+  for_each(iterable, [&delimeter](const auto &value) {
+    std::cout << value << delimeter;
+  });
   std::cout << '\n';
 }
 
